@@ -1,3 +1,5 @@
+use serde_json::Map;
+use serde_json::Value;
 use wasm_bindgen::prelude::*;
 use wasm_bindgen_futures::JsFuture;
 use web_sys::Request;
@@ -17,5 +19,12 @@ pub async fn get_coin_price(coin: String) -> Result<String, JsValue> {
     let resp = resp_value.dyn_into::<web_sys::Response>().unwrap();
     let text = JsFuture::from(resp.text()?).await?.as_string().unwrap();
 
-    Ok(text)
+    let price = parse_body(&text);
+
+    Ok(price)
+}
+
+fn parse_body(body: &str) -> String {
+    let json: Map<String, Value> = serde_json::from_str(body).unwrap();
+    json["market_data"]["current_price"]["usd"].to_string()
 }
