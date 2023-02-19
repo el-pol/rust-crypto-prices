@@ -7,14 +7,22 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>Rust Crypto Prices</title>
 	<script type="module">
-		import init from "..pkg/crypto_prices.js";
+		import init, { get_coin_price } from "../pkg/rust_crypto_prices.js";
 		init().then(() => {
 			console.log("WebAssembly module loaded");
+			get_coin_price("bitcoin").then(resp => {
+				console.log(resp);
+			})
 		});
 	</script>
 </head>
 
 <body>
+	<div>
+		<input type="text" name="coin" id="coin">
+		<button id="price-button">Search</button>
+	</div>
+	<h2 id="price-label"></h2>
 
 </body>
 
